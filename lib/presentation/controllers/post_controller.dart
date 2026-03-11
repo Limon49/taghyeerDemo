@@ -27,13 +27,10 @@ class PostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('PostController onInit() called');
     _fetchPosts();
   }
   
   Future<void> _fetchPosts({bool isRefresh = false}) async {
-    print('Fetching posts: isRefresh=$isRefresh, skip=$_skip, limit=$_limit');
-    
     if (isRefresh) {
       _skip = 0;
       _isLoading.value = true;
@@ -45,25 +42,19 @@ class PostController extends GetxController {
     
     try {
       final newPosts = await _postRepository.getPosts(_limit, _skip);
-      print('Received ${newPosts.length} posts from repository');
       
       if (isRefresh) {
         _posts.assignAll(newPosts);
-        print('Assigned ${newPosts.length} posts to refresh list');
       } else {
         _posts.addAll(newPosts);
-        print('Added ${newPosts.length} posts to existing list');
       }
       
       if (newPosts.length < _limit) {
         _hasReachedMax.value = true;
-        print('Reached max posts: ${newPosts.length} < $_limit');
       }
       
       _skip += _limit;
-      print('Total posts now: ${_posts.length}');
     } catch (e) {
-      print('Error fetching posts: $e');
       _errorMessage.value = _mapExceptionToMessage(e);
       Get.snackbar('Error', _errorMessage.value, backgroundColor: Get.theme.colorScheme.error);
     } finally {

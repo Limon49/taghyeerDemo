@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class PostEntity {
   final int id;
   final String title;
@@ -22,7 +24,6 @@ class PostEntity {
     return '${body.substring(0, 100)}...';
   }
   
-  // Helper method to get total reactions count
   int get totalReactions {
     if (reactions == null) return 0;
     final likes = (reactions!['likes'] as num?)?.toInt() ?? 0;

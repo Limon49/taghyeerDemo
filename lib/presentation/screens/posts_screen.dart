@@ -11,24 +11,7 @@ class PostsScreen extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     
     return Obx(() {
-      print('PostsScreen building - checking controller');
-      PostController controller;
-      try {
-        controller = Get.find<PostController>();
-        print('PostController found: isLoading=${controller.isLoading}, posts.length=${controller.posts.length}');
-        
-        // Manually trigger fetch if no posts and not loading
-        if (!controller.isLoading && controller.posts.isEmpty) {
-          print('No posts found and not loading, manually triggering fetch');
-          controller.refreshPosts();
-        }
-      } catch (e) {
-        print('Error finding PostController: $e');
-        return Scaffold(
-          appBar: AppBar(title: const Text('Posts')),
-          body: Center(child: Text('Controller not found')),
-        );
-      }
+      final controller = Get.find<PostController>();
       
       // Add scroll listener for pagination
       scrollController.addListener(() {

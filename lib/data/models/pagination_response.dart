@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 part 'pagination_response.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)

@@ -108,14 +108,9 @@ class AppBindings extends Bindings {
     ));
 
     // Controllers
-    print('Creating AuthController...');
     Get.put<AuthController>(AuthController(Get.find()));
-    print('Creating ProductController...');
     Get.put<ProductController>(ProductController(Get.find()));
-    print('Creating PostController...');
     Get.put<PostController>(PostController(Get.find()));
-    print('Creating ThemeController...');
     Get.put<ThemeController>(ThemeController(Get.find()));
-    print('All controllers created successfully');
   }
 }

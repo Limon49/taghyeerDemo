@@ -30,8 +30,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       try {
         final Map<String, dynamic> json = jsonDecode(response.body);
         print('Product API Decoded JSON: $json');
-        
-        // DummyJSON returns products directly in the "products" field with pagination info
+
+        //todo dummy for post
         final List<dynamic> productsData = json['products'] ?? [];
         final int total = json['total'] ?? 0;
         final int skip = json['skip'] ?? 0;
@@ -39,14 +39,12 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         
         print('Raw products data: $productsData');
         
-        // Convert to ProductModel objects
         final List<ProductModel> productModels = productsData
             .map((productJson) => ProductModel.fromJson(productJson as Map<String, dynamic>))
             .toList();
         
         print('Converted ${productModels.length} product models');
         
-        // Create PaginationResponse
         final paginationResponse = PaginationResponse<ProductModel>(
           items: productModels,
           total: total,

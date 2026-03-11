@@ -48,14 +48,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerFailure('Empty response from server');
       }
       
-      // If response body is somehow a ServerFailure object, extract its message
       if (responseBody is ServerFailure) {
         throw responseBody;
       }
       
-      // Ensure we have a string to decode
       final jsonString = responseBody.toString();
-      print('Attempting to decode JSON: $jsonString');
+      print('decode JSON: $jsonString');
       
       final decodedJson = jsonDecode(jsonString);
       print('Decoded JSON: $decodedJson');

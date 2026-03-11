@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class UserEntity {
   final int id;
   final String username;
@@ -6,7 +8,7 @@ class UserEntity {
   final String lastName;
   final String? image;
   final String? token;
-  
+
   const UserEntity({
     required this.id,
     required this.username,
@@ -16,30 +18,28 @@ class UserEntity {
     this.image,
     this.token,
   });
-  
+
   String get fullName => '$firstName $lastName';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is UserEntity &&
-        other.id == id &&
-        other.username == username &&
-        other.email == email &&
-        other.firstName == firstName &&
-        other.lastName == lastName &&
-        other.image == image &&
-        other.token == token;
+        listEquals(
+          [id, username, email, firstName, lastName, image, token],
+          [
+            other.id,
+            other.username,
+            other.email,
+            other.firstName,
+            other.lastName,
+            other.image,
+            other.token,
+          ],
+        );
   }
-  
+
   @override
-  int get hashCode {
-    return id.hashCode ^
-        username.hashCode ^
-        email.hashCode ^
-        firstName.hashCode ^
-        lastName.hashCode ^
-        image.hashCode ^
-        token.hashCode;
-  }
+  int get hashCode =>
+      Object.hash(id, username, email, firstName, lastName, image, token);
 }

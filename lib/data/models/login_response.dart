@@ -48,7 +48,7 @@ class LoginResponse {
   
   Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
   
-  // Convert to UserModel for compatibility
+
   UserModel get user {
     return UserModel(
       id: id ?? 0,

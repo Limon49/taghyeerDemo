@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ProductEntity {
   final int id;
   final String title;
@@ -10,7 +12,7 @@ class ProductEntity {
   final String category;
   final String thumbnail;
   final List<String> images;
-  
+
   const ProductEntity({
     required this.id,
     required this.title,
@@ -24,36 +26,53 @@ class ProductEntity {
     required this.thumbnail,
     required this.images,
   });
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is ProductEntity &&
-        other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.price == price &&
-        other.discountPercentage == discountPercentage &&
-        other.rating == rating &&
-        other.stock == stock &&
-        other.brand == brand &&
-        other.category == category &&
-        other.thumbnail == thumbnail &&
-        other.images == images;
+        listEquals(
+          [
+            id,
+            title,
+            description,
+            price,
+            discountPercentage,
+            rating,
+            stock,
+            brand,
+            category,
+            thumbnail,
+            images,
+          ],
+          [
+            other.id,
+            other.title,
+            other.description,
+            other.price,
+            other.discountPercentage,
+            other.rating,
+            other.stock,
+            other.brand,
+            other.category,
+            other.thumbnail,
+            other.images,
+          ],
+        );
   }
-  
+
   @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        price.hashCode ^
-        discountPercentage.hashCode ^
-        rating.hashCode ^
-        stock.hashCode ^
-        brand.hashCode ^
-        category.hashCode ^
-        thumbnail.hashCode ^
-        images.hashCode;
-  }
+  int get hashCode => Object.hash(
+    id,
+    title,
+    description,
+    price,
+    discountPercentage,
+    rating,
+    stock,
+    brand,
+    category,
+    thumbnail,
+    images,
+  );
 }
