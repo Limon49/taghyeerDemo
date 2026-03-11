@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import '../../../core/exceptions/failures.dart';
+import '../../../core/utils/connectivity_utils.dart';
 
 class AuthController extends GetxController {
   final AuthRepository _authRepository;
@@ -41,6 +42,12 @@ class AuthController extends GetxController {
   }
   
   Future<void> login(String username, String password) async {
+    // Check internet connection
+    if (!await ConnectivityUtils.checkConnection()) {
+      _isLoading.value = false;
+      return;
+    }
+    
     _isLoading.value = true;
     _errorMessage.value = '';
     

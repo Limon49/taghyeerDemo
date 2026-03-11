@@ -13,7 +13,7 @@ class PostsScreen extends StatelessWidget {
     return Obx(() {
       final controller = Get.find<PostController>();
       
-      // Add scroll listener for pagination
+      // todo pagination
       scrollController.addListener(() {
         if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
           controller.loadMorePosts();

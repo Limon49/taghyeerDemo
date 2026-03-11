@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../data/datasources/local/theme_local_data_source.dart';
-import '../../../core/exceptions/failures.dart';
 
 class ThemeController extends GetxController {
   final ThemeLocalDataSource _themeLocalDataSource;

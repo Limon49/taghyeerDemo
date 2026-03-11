@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../domain/entities/post_entity.dart';
 import '../../../domain/repositories/post_repository.dart';
 import '../../../core/exceptions/failures.dart';
+import '../../../core/utils/connectivity_utils.dart';
 
 class PostController extends GetxController {
   final PostRepository _postRepository;
@@ -31,6 +32,16 @@ class PostController extends GetxController {
   }
   
   Future<void> _fetchPosts({bool isRefresh = false}) async {
+    // Check internet connection
+    if (!await ConnectivityUtils.checkConnection()) {
+      if (isRefresh) {
+        _isLoading.value = false;
+      } else {
+        _isLoadingMore.value = false;
+      }
+      return;
+    }
+    
     if (isRefresh) {
       _skip = 0;
       _isLoading.value = true;

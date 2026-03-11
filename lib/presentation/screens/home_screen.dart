@@ -4,6 +4,7 @@ import '../controllers/theme_controller.dart';
 import '../screens/products_screen.dart';
 import '../screens/posts_screen.dart';
 import '../screens/settings_screen.dart';
+import '../../core/utils/connectivity_utils.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

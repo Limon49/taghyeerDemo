@@ -19,10 +19,14 @@ import 'data/datasources/remote/product_remote_data_source.dart';
 import 'data/datasources/remote/post_remote_data_source.dart';
 import 'data/datasources/local/auth_local_data_source.dart';
 import 'data/datasources/local/theme_local_data_source.dart';
+import 'core/utils/connectivity_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
+  
+  ConnectivityUtils.listenToConnectivity();
+  
   runApp(MyApp(sharedPreferences: sharedPreferences));
 }
 
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Taghyeer Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -88,7 +93,6 @@ class AppBindings extends Bindings {
 
   @override
   void dependencies() {
-    // Repositories
     Get.lazyPut<AuthRepository>(() => AuthRepositoryImpl(
       remoteDataSource: AuthRemoteDataSourceImpl(client: http.Client()),
       localDataSource: AuthLocalDataSourceImpl(sharedPreferences: sharedPreferences),
@@ -102,12 +106,11 @@ class AppBindings extends Bindings {
       remoteDataSource: PostRemoteDataSourceImpl(client: http.Client()),
     ));
 
-    // Data Sources
+    // todo Data Sources
     Get.lazyPut<ThemeLocalDataSource>(() => ThemeLocalDataSourceImpl(
       sharedPreferences: sharedPreferences,
     ));
 
-    // Controllers
     Get.put<AuthController>(AuthController(Get.find()));
     Get.put<ProductController>(ProductController(Get.find()));
     Get.put<PostController>(PostController(Get.find()));

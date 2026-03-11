@@ -96,11 +96,6 @@ class LoginScreen extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: controller.isLoading ? null : _useDefaultCredentials,
-                    child: const Text('Use Default Credentials'),
-                  ),
                 ],
               ),
             ),
@@ -119,8 +114,4 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  void _useDefaultCredentials() {
-    _usernameController.text = AppConstants.defaultUsername;
-    _passwordController.text = AppConstants.defaultPassword;
-  }
 }

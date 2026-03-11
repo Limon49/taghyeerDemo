@@ -14,7 +14,7 @@ class ProductsScreen extends StatelessWidget {
     return Obx(() {
       final controller = Get.find<ProductController>();
       
-      // Add scroll listener for pagination
+      // todo pagination
       scrollController.addListener(() {
         if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
           controller.loadMoreProducts();
