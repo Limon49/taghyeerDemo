@@ -2,12 +2,20 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+  explicitToJson: true,
+  includeIfNull: false,
+)
 class UserModel {
+  @JsonKey(defaultValue: 0)
   final int id;
+  @JsonKey(defaultValue: '')
   final String username;
+  @JsonKey(defaultValue: '')
   final String email;
+  @JsonKey(defaultValue: '')
   final String firstName;
+  @JsonKey(defaultValue: '')
   final String lastName;
   final String? image;
   final String? token;
@@ -22,7 +30,20 @@ class UserModel {
     this.token,
   });
   
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    print('UserModel JSON input: $json');
+    
+    try {
+      final result = _$UserModelFromJson(json);
+      print('UserModel parsed successfully: $result');
+      return result;
+    } catch (e) {
+      print('UserModel parsing error: $e');
+      print('JSON keys: ${json.keys}');
+      print('JSON types: ${json.map((key, value) => MapEntry(key, value.runtimeType))}');
+      rethrow;
+    }
+  }
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
   
   UserModel copyWith({

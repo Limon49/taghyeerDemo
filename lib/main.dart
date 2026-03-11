@@ -61,23 +61,23 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(
-      builder: (controller) {
-        if (controller.isLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        
-        if (controller.isLoggedIn) {
-          return const HomeScreen();
-        }
-        
-        return LoginScreen();
-      },
-    );
+    return Obx(() {
+      final controller = Get.find<AuthController>();
+      
+      if (controller.isLoading) {
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+      
+      if (controller.isLoggedIn) {
+        return const HomeScreen();
+      }
+      
+      return LoginScreen();
+    });
   }
 }
 
@@ -108,9 +108,14 @@ class AppBindings extends Bindings {
     ));
 
     // Controllers
-    Get.lazyPut<AuthController>(() => AuthController(Get.find()));
-    Get.lazyPut<ProductController>(() => ProductController(Get.find()));
-    Get.lazyPut<PostController>(() => PostController(Get.find()));
-    Get.lazyPut<ThemeController>(() => ThemeController(Get.find()));
+    print('Creating AuthController...');
+    Get.put<AuthController>(AuthController(Get.find()));
+    print('Creating ProductController...');
+    Get.put<ProductController>(ProductController(Get.find()));
+    print('Creating PostController...');
+    Get.put<PostController>(PostController(Get.find()));
+    print('Creating ThemeController...');
+    Get.put<ThemeController>(ThemeController(Get.find()));
+    print('All controllers created successfully');
   }
 }

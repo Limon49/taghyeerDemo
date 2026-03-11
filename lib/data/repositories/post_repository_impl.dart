@@ -13,13 +13,14 @@ class PostRepositoryImpl implements PostRepository {
   Future<List<PostEntity>> getPosts(int limit, int skip) async {
     try {
       final response = await remoteDataSource.getPosts(limit, skip);
-      return response.posts.map((model) => PostEntity(
+      return response.items.map((model) => PostEntity(
         id: model.id,
         title: model.title,
         body: model.body,
         userId: model.userId,
         tags: model.tags,
         reactions: model.reactions,
+        views: model.views,
       )).toList();
     } catch (e) {
       if (e is Failure) {

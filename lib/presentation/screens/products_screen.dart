@@ -11,49 +11,48 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
     
-    return GetBuilder<ProductController>(
-      init: Get.find<ProductController>(),
-      builder: (controller) {
-        // Add scroll listener for pagination
-        scrollController.addListener(() {
-          if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-            controller.loadMoreProducts();
-          }
-        });
+    return Obx(() {
+      final controller = Get.find<ProductController>();
+      
+      // Add scroll listener for pagination
+      scrollController.addListener(() {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+          controller.loadMoreProducts();
+        }
+      });
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Products'),
-          ),
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await controller.refreshProducts();
-            },
-            child: controller.isLoading && controller.products.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : controller.isEmpty
-                    ? const Center(
-                        child: Text('No products available'),
-                      )
-                    : ListView.builder(
-                        controller: scrollController,
-                        itemCount: controller.products.length + (controller.hasReachedMax ? 0 : 1),
-                        itemBuilder: (context, index) {
-                          if (index >= controller.products.length) {
-                            return const Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Products'),
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await controller.refreshProducts();
+          },
+          child: controller.isLoading && controller.products.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : controller.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ListView.builder(
+                      controller: scrollController,
+                      itemCount: controller.products.length + (controller.hasReachedMax ? 0 : 1),
+                      itemBuilder: (context, index) {
+                        if (index >= controller.products.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
 
-                          final product = controller.products[index];
-                          return ProductCard(product: product);
-                        },
-                      ),
-          ),
-        );
-      },
-    );
+                        final product = controller.products[index];
+                        return ProductCard(product: product);
+                      },
+                    ),
+        ),
+      );
+    });
   }
 }
 

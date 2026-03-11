@@ -4,7 +4,8 @@ class PostEntity {
   final String body;
   final int userId;
   final List<String> tags;
-  final int reactions;
+  final Map<String, dynamic>? reactions;
+  final int views;
   
   const PostEntity({
     required this.id,
@@ -12,12 +13,21 @@ class PostEntity {
     required this.body,
     required this.userId,
     required this.tags,
-    required this.reactions,
+    this.reactions,
+    required this.views,
   });
   
   String get bodyPreview {
     if (body.length <= 100) return body;
     return '${body.substring(0, 100)}...';
+  }
+  
+  // Helper method to get total reactions count
+  int get totalReactions {
+    if (reactions == null) return 0;
+    final likes = (reactions!['likes'] as num?)?.toInt() ?? 0;
+    final dislikes = (reactions!['dislikes'] as num?)?.toInt() ?? 0;
+    return likes + dislikes;
   }
   
   @override
@@ -29,7 +39,8 @@ class PostEntity {
         other.body == body &&
         other.userId == userId &&
         other.tags == tags &&
-        other.reactions == reactions;
+        other.reactions == reactions &&
+        other.views == views;
   }
   
   @override
@@ -39,6 +50,7 @@ class PostEntity {
         body.hashCode ^
         userId.hashCode ^
         tags.hashCode ^
-        reactions.hashCode;
+        reactions.hashCode ^
+        views.hashCode;
   }
 }

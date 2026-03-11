@@ -4,15 +4,13 @@ part 'pagination_response.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)
 class PaginationResponse<T> {
-  final List<T> products;
-  final List<T> posts;
+  final List<T> items;
   final int total;
   final int skip;
   final int limit;
   
   const PaginationResponse({
-    required this.products,
-    required this.posts,
+    required this.items,
     required this.total,
     required this.skip,
     required this.limit,

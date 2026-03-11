@@ -10,49 +10,65 @@ class PostsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
     
-    return GetBuilder<PostController>(
-      init: Get.find<PostController>(),
-      builder: (controller) {
-        // Add scroll listener for pagination
-        scrollController.addListener(() {
-          if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-            controller.loadMorePosts();
-          }
-        });
-
+    return Obx(() {
+      print('PostsScreen building - checking controller');
+      PostController controller;
+      try {
+        controller = Get.find<PostController>();
+        print('PostController found: isLoading=${controller.isLoading}, posts.length=${controller.posts.length}');
+        
+        // Manually trigger fetch if no posts and not loading
+        if (!controller.isLoading && controller.posts.isEmpty) {
+          print('No posts found and not loading, manually triggering fetch');
+          controller.refreshPosts();
+        }
+      } catch (e) {
+        print('Error finding PostController: $e');
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Posts'),
-          ),
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await controller.refreshPosts();
-            },
-            child: controller.isLoading && controller.posts.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : controller.isEmpty
-                    ? const Center(
-                        child: Text('No posts available'),
-                      )
-                    : ListView.builder(
-                        controller: scrollController,
-                        itemCount: controller.posts.length + (controller.hasReachedMax ? 0 : 1),
-                        itemBuilder: (context, index) {
-                          if (index >= controller.posts.length) {
-                            return const Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-
-                          final post = controller.posts[index];
-                          return PostCard(post: post);
-                        },
-                      ),
-          ),
+          appBar: AppBar(title: const Text('Posts')),
+          body: Center(child: Text('Controller not found')),
         );
-      },
-    );
+      }
+      
+      // Add scroll listener for pagination
+      scrollController.addListener(() {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+          controller.loadMorePosts();
+        }
+      });
+
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Posts'),
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await controller.refreshPosts();
+          },
+          child: controller.isLoading && controller.posts.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : controller.isEmpty
+                  ? const Center(
+                      child: Text('No posts available'),
+                    )
+                  : ListView.builder(
+                      controller: scrollController,
+                      itemCount: controller.posts.length + (controller.hasReachedMax ? 0 : 1),
+                      itemBuilder: (context, index) {
+                        if (index >= controller.posts.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+
+                        final post = controller.posts[index];
+                        return PostCard(post: post);
+                      },
+                    ),
+        ),
+      );
+    });
   }
 }
 

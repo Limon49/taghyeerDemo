@@ -13,7 +13,7 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<List<ProductEntity>> getProducts(int limit, int skip) async {
     try {
       final response = await remoteDataSource.getProducts(limit, skip);
-      return response.products.map((model) => ProductEntity(
+      return response.items.map((model) => ProductEntity(
         id: model.id,
         title: model.title,
         description: model.description,

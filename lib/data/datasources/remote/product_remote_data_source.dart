@@ -16,17 +16,50 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   
   @override
   Future<PaginationResponse<ProductModel>> getProducts(int limit, int skip) async {
+    print('ProductRemoteDataSource: Getting products with limit=$limit, skip=$skip');
+    
     final response = await client.get(
       Uri.parse('${AppConstants.baseUrl}${AppConstants.productsEndpoint}?limit=$limit&skip=$skip'),
       headers: {'Content-Type': AppConstants.contentTypeHeader},
     );
     
+    print('Product API Response Status: ${response.statusCode}');
+    print('Product API Response Body: ${response.body}');
+    
     if (response.statusCode == 200) {
-      final Map<String, dynamic> json = jsonDecode(response.body);
-      return PaginationResponse<ProductModel>.fromJson(
-        json,
-        (json) => ProductModel.fromJson(json as Map<String, dynamic>),
-      );
+      try {
+        final Map<String, dynamic> json = jsonDecode(response.body);
+        print('Product API Decoded JSON: $json');
+        
+        // DummyJSON returns products directly in the "products" field with pagination info
+        final List<dynamic> productsData = json['products'] ?? [];
+        final int total = json['total'] ?? 0;
+        final int skip = json['skip'] ?? 0;
+        final int limit = json['limit'] ?? 10;
+        
+        print('Raw products data: $productsData');
+        
+        // Convert to ProductModel objects
+        final List<ProductModel> productModels = productsData
+            .map((productJson) => ProductModel.fromJson(productJson as Map<String, dynamic>))
+            .toList();
+        
+        print('Converted ${productModels.length} product models');
+        
+        // Create PaginationResponse
+        final paginationResponse = PaginationResponse<ProductModel>(
+          items: productModels,
+          total: total,
+          skip: skip,
+          limit: limit,
+        );
+        
+        print('Product Pagination Response: ${paginationResponse.items.length} items');
+        return paginationResponse;
+      } catch (e) {
+        print('Error parsing product response: $e');
+        throw ServerFailure('Failed to parse products: $e');
+      }
     } else {
       throw ServerFailure('Failed to load products: ${response.statusCode}');
     }

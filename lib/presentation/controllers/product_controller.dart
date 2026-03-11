@@ -27,10 +27,13 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('ProductController initialized');
     _fetchProducts();
   }
   
   Future<void> _fetchProducts({bool isRefresh = false}) async {
+    print('Fetching products: isRefresh=$isRefresh, skip=$_skip, limit=$_limit');
+    
     if (isRefresh) {
       _skip = 0;
       _isLoading.value = true;
@@ -42,6 +45,7 @@ class ProductController extends GetxController {
     
     try {
       final newProducts = await _productRepository.getProducts(_limit, _skip);
+      print('Received ${newProducts.length} products');
       
       if (isRefresh) {
         _products.assignAll(newProducts);
@@ -54,7 +58,9 @@ class ProductController extends GetxController {
       }
       
       _skip += _limit;
+      print('Total products now: ${_products.length}');
     } catch (e) {
+      print('Error fetching products: $e');
       _errorMessage.value = _mapExceptionToMessage(e);
       Get.snackbar('Error', _errorMessage.value, backgroundColor: Get.theme.colorScheme.error);
     } finally {
